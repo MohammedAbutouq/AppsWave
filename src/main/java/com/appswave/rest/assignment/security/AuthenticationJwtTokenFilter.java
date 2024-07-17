@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 @Component
@@ -37,15 +38,44 @@ public class AuthenticationJwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
 
+
+
+        String requestURL = request.getRequestURI();
+        if (
+                requestURL.startsWith("/api/auth/") ) {
+            filterChain.doFilter(request, response);
+
+            return;
+        }
+
+
+
+
         String username = null;
         String jwt = null;
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtTokenUtil.extractUsername(jwt);
-            } catch (IllegalArgumentException | ExpiredJwtException | SignatureException |
+            }catch (ExpiredJwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                PrintWriter writer = response.getWriter();
+                writer.write("{\"error\": \"JWT expired\"}");
+                writer.flush();
+                return;
+            }
+
+
+
+            catch (IllegalArgumentException  | SignatureException |
                     MalformedJwtException | NullPointerException | ArrayIndexOutOfBoundsException e) {
-                filterChain.doFilter(request, response);
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setContentType("application/json");
+                PrintWriter writer = response.getWriter();
+                writer.write("{\"error\": \"Invalid JWT token\"}");
+                writer.flush();
+                return;
             }
         }
 
@@ -68,6 +98,12 @@ public class AuthenticationJwtTokenFilter extends OncePerRequestFilter {
 
             return;
         }
+
+
+
+
+
+
 
 
         JwtUserDetails jwtUserDetails  = null ;
