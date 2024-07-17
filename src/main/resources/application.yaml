@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: assignment
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/assignment?useUnicode=true&characterEncoding=UTF8&serverTimezone=UTC&useLegacyDatetimeCode=false&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password:  ${DB_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
