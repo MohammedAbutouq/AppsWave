@@ -1,7 +1,8 @@
-package com.appswave.rest.assignment.config;
+package com.appswave.rest.assignment.security;
 
-import com.appswave.rest.assignment.entity.JwtBlacklist;
 import com.appswave.rest.assignment.repository.JwtBlacklistRepository;
+import com.appswave.rest.assignment.security.JwtTokenUtil;
+import com.appswave.rest.assignment.security.JwtUserDetails;
 import com.appswave.rest.assignment.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

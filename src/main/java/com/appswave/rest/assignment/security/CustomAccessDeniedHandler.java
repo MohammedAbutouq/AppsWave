@@ -1,4 +1,4 @@
-package com.appswave.rest.assignment.config;
+package com.appswave.rest.assignment.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

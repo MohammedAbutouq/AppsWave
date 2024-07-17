@@ -1,8 +1,8 @@
 package com.appswave.rest.assignment.service;
 
-import com.appswave.rest.assignment.config.ErrorResponse;
-import com.appswave.rest.assignment.config.JwtUserDetails;
-import com.appswave.rest.assignment.config.SuccessResponse;
+import com.appswave.rest.assignment.helper.ErrorResponse;
+import com.appswave.rest.assignment.security.JwtUserDetails;
+import com.appswave.rest.assignment.helper.SuccessResponse;
 import com.appswave.rest.assignment.dto.UserDTO;
 import com.appswave.rest.assignment.entity.JwtBlacklist;
 import com.appswave.rest.assignment.entity.User;

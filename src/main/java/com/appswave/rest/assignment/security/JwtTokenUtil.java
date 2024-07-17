@@ -1,6 +1,7 @@
 
-package com.appswave.rest.assignment.config;
+package com.appswave.rest.assignment.security;
 
+import com.appswave.rest.assignment.security.JwtUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,7 +1,6 @@
 package com.appswave.rest.assignment.helper;
 
-import com.appswave.rest.assignment.config.JwtUserDetails;
-import org.springframework.context.annotation.Bean;
+import com.appswave.rest.assignment.security.JwtUserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

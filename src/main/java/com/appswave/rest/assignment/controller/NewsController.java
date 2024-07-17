@@ -1,7 +1,7 @@
 package com.appswave.rest.assignment.controller;
 
-import com.appswave.rest.assignment.config.ErrorResponse;
-import com.appswave.rest.assignment.config.JwtUserDetails;
+import com.appswave.rest.assignment.helper.ErrorResponse;
+import com.appswave.rest.assignment.security.JwtUserDetails;
 import com.appswave.rest.assignment.dto.NewsStatusUpdateRequest;
 import com.appswave.rest.assignment.entity.News;
 import com.appswave.rest.assignment.enums.Role;
@@ -52,6 +52,31 @@ public class NewsController {
 
         return newsService.findAllByUserId(pageable, jwtUserDetails.getUserId());
     }
+
+
+
+    @GetMapping("/pendingDelete")
+    public Page<News> getPendingDelete(@RequestParam(defaultValue = "0") int pageNumber,
+                                 @RequestParam(defaultValue = "10") int pageSize,
+                                 @RequestParam(defaultValue = "id") String sortBy,
+                                 @RequestParam(defaultValue = "asc") String sortOrder) {
+
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        JwtUserDetails jwtUserDetails = helper.getUserDetailsFromToken();
+
+        if (jwtUserDetails == null) {
+            return Page.empty();
+        }
+
+        if (jwtUserDetails.getRole() == Role.ADMIN) {
+            return newsService.findPendingDelete(pageable);
+        }
+
+        return newsService.findPendingDelete(pageable, jwtUserDetails.getUserId());
+    }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getNewsById(@PathVariable Long id) {
@@ -129,10 +154,10 @@ public class NewsController {
         }
 
         if (jwtUserDetails.getRole() == Role.ADMIN) {
-            return newsService.deleteByAdmin(id);
+            return newsService.deleteNews(id,null);
         }
 
-        return newsService.deleteByUser(id, jwtUserDetails.getUserId());
+        return newsService.deleteNews(id, jwtUserDetails.getUserId());
     }
 
 

@@ -1,4 +1,4 @@
-package com.appswave.rest.assignment.config;
+package com.appswave.rest.assignment.helper;
 
 import java.util.List;
 

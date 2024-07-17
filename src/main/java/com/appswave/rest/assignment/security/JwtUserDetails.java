@@ -1,4 +1,4 @@
-package com.appswave.rest.assignment.config;
+package com.appswave.rest.assignment.security;
 
 import com.appswave.rest.assignment.entity.User;
 import com.appswave.rest.assignment.enums.Role;

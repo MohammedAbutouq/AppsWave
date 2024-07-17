@@ -1,7 +1,7 @@
 package com.appswave.rest.assignment.service;
 
-import com.appswave.rest.assignment.config.ErrorResponse;
-import com.appswave.rest.assignment.config.SuccessResponse;
+import com.appswave.rest.assignment.helper.ErrorResponse;
+import com.appswave.rest.assignment.helper.SuccessResponse;
 import com.appswave.rest.assignment.entity.News;
 import com.appswave.rest.assignment.entity.User;
 import com.appswave.rest.assignment.enums.Status;
@@ -28,6 +28,9 @@ public class NewsService {
     public NewsService(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
     }
+
+
+
 
     public Page<News> findAll(Pageable pageable) {
         return newsRepository.findByStatusIsNot(Status.DELETED, pageable);
@@ -89,25 +92,37 @@ public class NewsService {
         return new ResponseEntity<>(newsRepository.save(updatedNews), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deleteByAdmin(Long id) {
-        return deleteNews(id, null);
-    }
 
-    public ResponseEntity<?> deleteByUser(Long id, Long userId) {
-        return deleteNews(id, userId);
-    }
 
-    private ResponseEntity<?> deleteNews(Long id, Long userId) {
+
+    public ResponseEntity<?> deleteNews(Long newsId, Long userId) {
         News updatedNews = (userId == null) ?
-                newsRepository.findByIdAndStatusIsNot(id, Status.DELETED) :
-                newsRepository.findByIdAndUser_IdAndStatusIsNot(id, userId, Status.DELETED);
+                newsRepository.findByIdAndStatusIsNot(newsId, Status.DELETED) :
+                newsRepository.findByIdAndUser_IdAndStatusIsNot(newsId, userId, Status.DELETED);
 
         if (updatedNews == null) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Validation failed", List.of("News not found!")));
         }
 
-        updatedNews.setStatus(Status.DELETED);
-        return new ResponseEntity<>(new SuccessResponse("News deleted successfully!"), HttpStatus.OK);
+        if (userId == null){
+            updatedNews.setStatus(Status.DELETED);
+            updatedNews.setSoftDeleted(false);
+
+            return new ResponseEntity<>(new SuccessResponse("News deleted successfully!"), HttpStatus.OK);
+
+        }
+
+        if (updatedNews.getStatus() == Status.APPROVED){
+            updatedNews.setSoftDeleted(true);
+            return new ResponseEntity<>(new SuccessResponse("The admin has been notified to delete this news successfully!"), HttpStatus.OK);
+
+        } else {
+            updatedNews.setStatus(Status.DELETED);
+            updatedNews.setSoftDeleted(false);
+            return new ResponseEntity<>(new SuccessResponse("News deleted successfully!"), HttpStatus.OK);
+        }
+
+
     }
 
     private List<String> validateNews(News news) {
@@ -159,5 +174,13 @@ public class NewsService {
             return ResponseEntity.badRequest().body(new ErrorResponse("Validation failed", List.of("News not found!")));
         }
         return new ResponseEntity<>(news, HttpStatus.OK);
+    }
+
+    public Page<News> findPendingDelete(Pageable pageable) {
+       return newsRepository.findByStatusIsNotAndSoftDeletedIsTrue(Status.DELETED,pageable);
+    }
+
+    public Page<News> findPendingDelete(Pageable pageable,Long userId) {
+        return newsRepository.findByStatusIsNotAndUser_IdAndSoftDeletedTrue(Status.DELETED,userId,pageable);
     }
 }

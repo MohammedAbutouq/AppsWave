@@ -1,7 +1,7 @@
 package com.appswave.rest.assignment.controller;
 
 
-import com.appswave.rest.assignment.config.ErrorResponse;
+import com.appswave.rest.assignment.helper.ErrorResponse;
 import com.appswave.rest.assignment.dto.UserDTO;
 import com.appswave.rest.assignment.entity.User;
 import com.appswave.rest.assignment.service.UserService;

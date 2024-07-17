@@ -1,10 +1,10 @@
 package com.appswave.rest.assignment.controller;
 
 
-import com.appswave.rest.assignment.config.ErrorResponse;
+import com.appswave.rest.assignment.helper.ErrorResponse;
 
-import com.appswave.rest.assignment.config.JwtTokenUtil;
-import com.appswave.rest.assignment.config.JwtUserDetails;
+import com.appswave.rest.assignment.security.JwtTokenUtil;
+import com.appswave.rest.assignment.security.JwtUserDetails;
 import com.appswave.rest.assignment.dto.JwtResponse;
 import com.appswave.rest.assignment.dto.LoginRequest;
 import com.appswave.rest.assignment.entity.User;

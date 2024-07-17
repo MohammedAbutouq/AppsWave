@@ -12,6 +12,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -34,6 +35,14 @@ public interface NewsRepository extends CrudRepository<News, Long> {
 
     News findByIdAndStatus(Long id, Status status);
 
+
+    @Transactional
+
+    List<News> findByStatusAndPublishDateIsBefore(Status status, LocalDate publishDate);
+
+    Page<News> findByStatusIsNotAndSoftDeletedIsTrue(Status status, Pageable pageable);
+
+    Page<News> findByStatusIsNotAndUser_IdAndSoftDeletedTrue(Status status, Long id, Pageable pageable);
 
 
 
